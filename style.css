@@ -1532,16 +1532,56 @@ body.wizard-mode {
         margin-bottom: 3rem;
     }
 
-    /* STEP 1: SIDE-BY-SIDE LAYOUT */
-    body.wizard-mode:has(#step-1.active) .wizard-top-section {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 4rem;
-        align-items: start;
-        background: white;
-        padding: 4rem;
-        border-radius: 40px;
-        box-shadow: 0 40px 100px rgba(0,0,0,0.08);
+    /* STEP 1: SIDE-BY-SIDE LAYOUT (Time Left, Calendar Right) */
+    body.wizard-mode:has(#step-1.active) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Create a wrapper-like behavior for the two siblings */
+    body.wizard-mode:has(#step-1.active) .wizard-top-section,
+    body.wizard-mode:has(#step-1.active) .wizard-bottom-sheet {
+        max-width: 1200px;
+        width: 100%;
+    }
+
+    /* We'll use a master grid on the Step 1 container (the body or a wrapper if we had one, but we'll use a hack) */
+    @supports (display: grid) {
+        body.wizard-mode:has(#step-1.active) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-areas: "time calendar";
+            gap: 2rem;
+            padding: 4rem;
+            align-content: center;
+            justify-items: center;
+        }
+
+        body.wizard-mode:has(#step-1.active) .wizard-top-section {
+            grid-area: calendar;
+            margin: 0;
+            background: white;
+            padding: 4rem;
+            border-radius: 40px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.06);
+        }
+
+        body.wizard-mode:has(#step-1.active) .wizard-bottom-sheet {
+            grid-area: time;
+            position: static;
+            background: white;
+            padding: 4rem;
+            border-radius: 40px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.06);
+            height: 100% !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transform: none !important;
+            opacity: 1 !important;
+        }
     }
 
     body.wizard-mode:has(#step-1.active) .calendar-card {
@@ -1549,33 +1589,17 @@ body.wizard-mode {
         background: transparent;
         box-shadow: none;
         border: none;
-        margin: 0;
     }
 
-    .calendar-card-title {
-        font-size: 2rem;
-        text-align: left;
-        margin-bottom: 2.5rem;
-    }
-
-    /* Move the Time Selection Step 1 content into the grid column */
-    body.wizard-mode:has(#step-1.active) .wizard-bottom-sheet {
-        position: static;
-        width: 100%;
-        max-width: none;
-        background: transparent;
-        box-shadow: none;
-        padding: 0;
-        margin-top: 0;
-        height: auto !important;
-        transform: none !important;
-        opacity: 1 !important;
-        display: block;
-    }
-
-    /* Align Time Selector with Calendar Grid */
     body.wizard-mode:has(#step-1.active) #step-1 {
-        padding-top: 5rem; /* Aligns with calendar title area */
+        padding: 0;
+    }
+
+    /* Adjust the back home button to not break the grid on step 1 */
+    body.wizard-mode:has(#step-1.active) .back-home-btn {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
     }
 
     /* STEP 2+ LAYOUT: Centered Card */
