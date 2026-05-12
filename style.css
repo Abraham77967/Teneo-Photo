@@ -1495,16 +1495,16 @@ body.wizard-mode {
 }
 
 /* ==========================================================================
-   Desktop Refinement: Booking Dashboard
+   Desktop Refinement: Professional Booking Suite
    ========================================================================== */
 @media (min-width: 1024px) {
     body.wizard-mode {
-        overflow: hidden; /* App-like feel */
+        overflow: auto; /* Allow natural scrolling if needed */
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100vh;
-        padding: 0;
+        min-height: 100vh;
+        padding: 40px 20px;
         background-color: #f8f9fc;
     }
 
@@ -1517,131 +1517,144 @@ body.wizard-mode {
         z-index: -1;
     }
 
-    /* Main Dashboard Container */
+    /* The main wrapper that holds everything */
     .booking-page.wizard-mode {
-        display: grid;
-        grid-template-columns: 420px 1fr;
-        width: 95vw;
-        height: 90vh;
-        max-width: 1300px;
-        background: white;
-        border-radius: 40px;
-        box-shadow: 0 40px 100px rgba(0,0,0,0.12);
-        overflow: hidden;
-        position: relative;
-    }
-
-    /* Left Sidebar: Calendar & Nav */
-    .wizard-top-section {
-        background: #fafbfc;
-        border-right: 1px solid rgba(0,0,0,0.05);
-        padding: 3rem 2.5rem;
         display: flex;
         flex-direction: column;
-        height: 100%;
-        overflow-y: auto;
-        z-index: 5;
-    }
-
-    .back-home-btn {
-        margin-bottom: 3rem;
-        align-self: flex-start;
-    }
-
-    .calendar-card {
-        box-shadow: none;
-        background: transparent;
-        padding: 0;
-        border: none;
         width: 100%;
-        margin-bottom: 0;
+        max-width: 1200px;
+        height: auto;
+        min-height: 800px;
+        background: white;
+        border-radius: 50px;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.08);
+        overflow: visible; /* Let children shine */
+        border: 1px solid rgba(0,0,0,0.03);
     }
 
-    /* Keep calendar visible and clean on desktop */
-    .calendar-card-title {
-        font-size: 1.8rem;
-        text-align: left;
-        margin-bottom: 2rem;
+    /* Layout Controller: Side-by-side on desktop */
+    /* We use a container feel inside the page */
+    
+    .wizard-top-section {
+        flex: none;
+        padding: 4rem 4rem 0;
+        height: auto;
+        display: block;
+        background: transparent;
+        border: none;
+        z-index: 10;
     }
 
-    .calendar-header {
-        margin-bottom: 2rem;
+    /* STEP 1: Special side-by-side layout for the distinct calendar feel */
+    body.wizard-mode:not(.is-sub-step) .wizard-top-section {
+        padding-bottom: 4rem;
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 5rem;
+        align-items: start;
     }
 
-    .calendar-grid span {
-        height: 44px;
-        font-size: 1rem;
+    /* The calendar card itself */
+    .calendar-card {
+        box-shadow: 0 20px 50px rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.05);
+        padding: 3rem;
+        border-radius: 40px;
+        width: 100%;
+        background: #fff;
     }
 
-    /* Right Main Area: Steps */
+    /* The "form/sheet" area */
     .wizard-bottom-sheet {
         position: relative;
         background: transparent;
         box-shadow: none;
-        padding: 5rem 6rem;
-        height: 100% !important;
-        max-height: none;
+        padding: 0 4rem 4rem;
         width: 100%;
         border-radius: 0;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
+        display: block;
+        transform: none !important;
+        opacity: 1 !important;
+        z-index: 5;
+    }
+
+    /* On Step 1, move the sheet content next to the calendar */
+    body.wizard-mode:not(.is-sub-step) .wizard-bottom-sheet {
+        position: absolute;
+        top: 4rem;
+        right: 0;
+        width: 45%; /* Occupy the right half of the grid */
+        height: auto;
+        padding-top: 5rem; /* Align with calendar title */
     }
 
     .wizard-bottom-sheet form {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        overflow-y: auto;
-        padding-right: 1rem;
+        height: auto;
+        overflow: visible;
     }
 
-    /* Hide the mobile transition animation for desktop form area */
     .wizard-step {
+        display: none;
         padding: 0;
         opacity: 1 !important;
         transform: none !important;
-        display: none;
     }
     .wizard-step.active {
         display: block;
     }
 
-    /* Step Titles on Desktop */
+    /* Desktop Navigation Header */
     .wizard-header-nav {
-        margin-bottom: 3.5rem;
+        margin-bottom: 3rem;
         display: flex !important;
         align-items: center;
-        gap: 1.5rem;
-        padding: 0;
+        gap: 2rem;
     }
 
     .wizard-header-title {
         font-size: 3rem;
         font-weight: 900;
-        color: var(--text-main);
+    }
+
+    /* Refine components for Desktop */
+    .calendar-card-title {
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .calendar-grid span {
+        height: 55px;
+        font-size: 1.1rem;
+    }
+
+    .time-section {
+        background: #fcfdfe;
+        padding: 2.5rem;
+        border-radius: 30px;
+        border: 1px solid rgba(0,0,0,0.03);
+        margin-bottom: 3rem;
     }
 
     .wizard-nav-buttons {
-        margin-top: auto;
-        padding: 3rem 0 0;
         position: static;
+        padding: 0;
         background: transparent;
     }
 
     .btn-wizard-next {
+        padding: 1.5rem 5rem;
+        font-size: 1.2rem;
         width: auto;
-        padding: 1.2rem 4rem;
-        font-size: 1.1rem;
-        border-radius: 18px;
     }
 
-    /* Fix the disconnected sub-step headers */
-    #other-steps-header {
-        display: flex !important;
+    /* Sub-step specific layouts */
+    body.wizard-mode.is-sub-step .wizard-bottom-sheet {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-top: 2rem;
     }
 
-    /* Hide redundant mobile controls */
+    /* Hide the mobile collapse/expand buttons */
     .change-date-btn {
         display: none !important;
     }
