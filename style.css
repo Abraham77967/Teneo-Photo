@@ -1547,12 +1547,10 @@ body.wizard-mode {
         width: 100%;
     }
 
-    /* We'll use a master grid on the Step 1 container (the body or a wrapper if we had one, but we'll use a hack) */
-    @supports (display: grid) {
         body.wizard-mode:has(#step-1.active) {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-areas: "time calendar";
+            grid-template-areas: "calendar time";
             gap: 2rem;
             padding: 4rem;
             align-content: center;
