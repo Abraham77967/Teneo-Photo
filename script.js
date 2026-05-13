@@ -1016,37 +1016,62 @@ document.addEventListener('DOMContentLoaded', () => {
             let photoLinks = [];
 
             const uploadPhotos = async () => {
+                const isZh = document.documentElement.lang === 'zh-CN';
+                
+                // Timeout increased to 30s for mobile uploads
                 const timeoutPromise = new Promise((resolve) => {
                     setTimeout(() => {
-                        console.warn('Photo upload timed out after 10s');
+                        console.warn('Photo upload timed out after 30s');
+                        showToast(isZh ? "图片上传超时，正在尝试继续提交..." : "Photo upload timed out, continuing with submission...");
                         resolve({ timeout: true });
-                    }, 10000);
+                    }, 30000);
                 });
 
                 try {
                     if (photoInput && photoInput.files.length > 0) {
-                        if (submitBtn) submitBtn.textContent = isZh ? "上传图片中..." : "Uploading photos...";
-                        if (desktopSubmitBtn) desktopSubmitBtn.textContent = isZh ? "上传图片中..." : "Uploading photos...";
+                        const fileCount = photoInput.files.length;
+                        if (submitBtn) submitBtn.textContent = isZh ? `上传中 (0/${fileCount})` : `Uploading (0/${fileCount})...`;
+                        if (desktopSubmitBtn) desktopSubmitBtn.textContent = isZh ? `上传中 (0/${fileCount})` : `Uploading (0/${fileCount})...`;
 
-                        const uploadPromises = Array.from(photoInput.files).map(file => {
-                            const formDataImg = new FormData();
-                            formDataImg.append('image', file);
-                            return fetch(`https://api.imgbb.com/1/upload?key=99ac161af67397a6f5968dd88ad16543`, {
-                                method: 'POST',
-                                body: formDataImg
-                            }).then(res => res.json()).catch(err => ({ success: false, error: err }));
+                        let uploadedCount = 0;
+                        const uploadPromises = Array.from(photoInput.files).map(async (file) => {
+                            try {
+                                const formDataImg = new FormData();
+                                formDataImg.append('image', file);
+                                
+                                const response = await fetch(`https://api.imgbb.com/1/upload?key=99ac161af67397a6f5968dd88ad16543`, {
+                                    method: 'POST',
+                                    body: formDataImg
+                                });
+                                
+                                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                                
+                                const result = await response.json();
+                                if (result && result.success) {
+                                    uploadedCount++;
+                                    if (submitBtn) submitBtn.textContent = isZh ? `上传中 (${uploadedCount}/${fileCount})` : `Uploading (${uploadedCount}/${fileCount})...`;
+                                    if (desktopSubmitBtn) desktopSubmitBtn.textContent = isZh ? `上传中 (${uploadedCount}/${fileCount})` : `Uploading (${uploadedCount}/${fileCount})...`;
+                                    return result.data.url;
+                                } else {
+                                    throw new Error(result.error ? result.error.message : 'Unknown ImgBB error');
+                                }
+                            } catch (e) {
+                                console.error('Individual file upload failed:', e);
+                                return null;
+                            }
                         });
 
                         const mainPromise = Promise.all(uploadPromises).then(results => {
-                            photoLinks = results.filter(r => r && r.success).map(r => r.data.url);
+                            photoLinks = results.filter(link => link !== null);
                             return { success: true };
                         });
 
-                        // Race against the 10s timeout
+                        // Race against the timeout
                         await Promise.race([mainPromise, timeoutPromise]);
                     }
                 } catch (err) {
-                    console.error('Photo Upload Error:', err);
+                    console.error('Photo Upload Global Error:', err);
+                    showToast(isZh ? "上传图片时发生错误" : "Error uploading photos: " + err.message);
                 }
             };
 
