@@ -2221,3 +2221,47 @@ body.wizard-mode:not(:has(#step-1.active)) .back-home-btn {
 }
 
 .desktop-header-continue-btn { display: none; }
+
+/* Review Step Styling */
+.review-summary-card {
+    background: #FAFAFA;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 2px solid #EAEAEA;
+    margin-bottom: 2rem;
+}
+
+.review-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.review-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #EAEAEA;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.review-label {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+}
+
+.review-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    word-break: break-word;
+}

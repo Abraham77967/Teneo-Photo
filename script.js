@@ -765,25 +765,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const customDropdownContainer = document.querySelector('.custom-dropdown');
     const dropdownCheckboxes = document.querySelectorAll('.dropdown-checkbox');
 
-<<<<<<< HEAD
-    const updateDropdownHeader = () => {
-        if (!dropdownHeader) return;
-        const allCheckboxes = document.querySelectorAll('.dropdown-checkbox');
-        const selected = Array.from(allCheckboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-        
-        if (selected.length === 0) {
-            dropdownHeader.textContent = dropdownHeader.dataset.default || 'Select Locations...';
-        } else if (selected.length === 1) {
-            dropdownHeader.textContent = selected[0];
-        } else {
-            dropdownHeader.textContent = `${selected.length} Locations Selected`;
-        }
-    };
-
-=======
->>>>>>> a68945f59de7e01f3a8cf06cbfe78b3f237601ef
     if (dropdownHeader) {
         // Toggle dropdown open/close
         dropdownHeader.addEventListener('click', () => {
@@ -792,30 +773,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
-<<<<<<< HEAD
-            if (customDropdownContainer && !customDropdownContainer.contains(e.target)) {
-                if (dropdownList) dropdownList.classList.add('hidden');
-            }
-        });
-    }
-
-    // Update header text on selection
-    dropdownCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateDropdownHeader);
-    });
-
-    // College Input Logic
-    const collegeInputs = document.querySelectorAll('.college-input');
-    collegeInputs.forEach(input => {
-        input.addEventListener('click', (e) => {
-            e.stopPropagation(); // prevent closing dropdown
-        });
-        input.addEventListener('input', (e) => {
-            const parent = e.target.closest('.college-item');
-            if (!parent) return;
-            const checkbox = parent.querySelector('.college-checkbox');
-            if (checkbox) {
-=======
             if (!customDropdownContainer.contains(e.target)) {
                 dropdownList.classList.add('hidden');
             }
@@ -841,31 +798,34 @@ document.addEventListener('DOMContentLoaded', () => {
             checkbox.addEventListener('change', updateDropdownHeader);
         });
 
-        // College Input Logic
-        const collegeInputs = document.querySelectorAll('.college-input');
-        collegeInputs.forEach(input => {
-            input.addEventListener('click', (e) => {
-                e.stopPropagation(); // prevent closing dropdown
-            });
-            input.addEventListener('input', (e) => {
-                const parent = e.target.closest('.college-item');
-                const checkbox = parent.querySelector('.college-checkbox');
->>>>>>> a68945f59de7e01f3a8cf06cbfe78b3f237601ef
-                if(e.target.value.trim() !== '') {
-                    checkbox.checked = true;
-                    checkbox.value = "College Building: " + e.target.value.trim();
-                }
-<<<<<<< HEAD
+
+    }
+
+    // College Input Logic - works even if there's no dropdown header
+    const collegeInputs = document.querySelectorAll('.college-input');
+    collegeInputs.forEach(input => {
+        input.addEventListener('click', (e) => {
+            e.stopPropagation(); // prevent closing dropdown if it exists
+        });
+        input.addEventListener('input', (e) => {
+            const parent = e.target.closest('.college-item');
+            if (!parent) return;
+            const checkbox = parent.querySelector('.college-checkbox');
+            if (!checkbox) return;
+            
+            if (e.target.value.trim() !== '') {
+                checkbox.checked = true;
+                checkbox.value = "College Building: " + e.target.value.trim();
+            } else {
+                checkbox.checked = false;
             }
-            updateDropdownHeader();
+            
+            // Safely call updateDropdownHeader if it exists
+            if (typeof updateDropdownHeader === 'function') {
+                updateDropdownHeader();
+            }
         });
     });
-=======
-                updateDropdownHeader();
-            });
-        });
-    }
->>>>>>> a68945f59de7e01f3a8cf06cbfe78b3f237601ef
 
     // Global Event Delegation for Custom Location Adding
     document.addEventListener('click', (e) => {
